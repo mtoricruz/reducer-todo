@@ -1,5 +1,6 @@
 import React, { useState, useReducer, useEffect } from 'react';
-import { formReducer, initialState } from '../reducers/formReducer'
+import { formReducer, initialState } from '../reducers/formReducer';
+import './TodoForm.css';
 
 function TodoForm() {
     const [newTodoText, setNewTodoText] = useState('')
@@ -10,7 +11,7 @@ function TodoForm() {
     };
 
     useEffect(() => {
-        console.log(state)
+        console.log('STATE', state)
     }, []) 
 
     const handleSubmit = e => {
@@ -18,6 +19,15 @@ function TodoForm() {
         console.log('click')
         dispatch({ type: 'ADD_TODO', payload: newTodoText })
         setNewTodoText('')
+    }
+
+    const toggleComplete = id => {
+        dispatch({ type: 'TOGGLE_COMPLETE', payload: id })
+    }
+
+    const clearComplete = () => {
+        // e.preventDefault()
+        dispatch({ type: 'CLEAR_COMPLETE'})
     }
 
     return (
@@ -32,11 +42,20 @@ function TodoForm() {
                 <button>
                     Add Task
                 </button>    
+                <button
+                    onClick={() => clearComplete()}
+                >
+                    Clear Completed Tasks
+                </button>
             </form>
             <div>
-                {state.tasks.map(task => {
+                {state.map(task => {
                     return (
-                        <p key={task.id}>{task.item}</p>
+                        <p 
+                            key={task.id} 
+                            className={task.completed ? 'complete' : ''}
+                            onClick={() => toggleComplete(task.id)}
+                        >{task.item}</p>
                     )}
                 )}
             </div>    
